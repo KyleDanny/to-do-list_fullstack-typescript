@@ -8,14 +8,20 @@ import { Todo } from './todo.model'
 const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
 
-  const todoHandler = (text: string) => {
+  const todoAddHandler = (text: string) => {
     setTodos(prevTodos => [...prevTodos, { id: Math.random().toString(), text: text }]);
+  }
+
+  const todoDeleteHandler = (todoId: string) => {
+    setTodos(prevTodos => {
+      return prevTodos.filter(todo => todo.id !== todoId);
+    });
   }
 
   return (
     <div className="App">
-      <NewToDoForm todoHandler={todoHandler} />
-      <ToDoList items={todos} />
+      <NewToDoForm todoAddHandler={todoAddHandler} />
+      <ToDoList items={todos} todoDeleteHandler={todoDeleteHandler} />
     </div>
   );
 }
