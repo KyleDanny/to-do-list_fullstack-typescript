@@ -5,7 +5,7 @@ interface ToDoListProps {
   todoDeleteHandler: (id: string) => void;
 }
 
-const ToDoList: React.FC<ToDoListProps> = ({items, todoDeleteHandler}) => {
+const ToDoList: React.FC<ToDoListProps> = ({items, todoDeleteHandler }) => {
 
   return <ul>
     {items.map((todo) => 
