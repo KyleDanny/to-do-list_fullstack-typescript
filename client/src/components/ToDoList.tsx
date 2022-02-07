@@ -1,9 +1,12 @@
-const ToDoList: React.FC = () => {
-  const todos = [ { id: 1, text: 'Apple' }, { id: 2, text: 'Banana' }, { id: 3, text: 'Pear' } ]
+interface ToDoListProps {
+  items: {id: string, text: string}[]
+}
+
+const ToDoList: React.FC<ToDoListProps> = ({items}) => {
 
   return <ul>
-    {todos.map((todo) => <li key={todo.id}> {todo.text} </li>)}
+    {items.map((todo) => <li key={todo.id}> {todo.text} </li>)}
   </ul>
-}
+} 
 
 export default ToDoList;
