@@ -18,8 +18,7 @@ app.use((0, body_parser_1.json)());
     console.error("Database connection failed", error);
     process.exit();
 });
-// app.use('/todos', todoRoutes);
 app.use((err, req, res, next) => {
+    console.log('im the error handler');
     res.status(500).json({ message: err.message });
 });
-// app.listen(3001);

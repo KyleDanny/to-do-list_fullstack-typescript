@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
 
-export class Todo {
-  constructor(public text: string, public id: string) {}
+export default class Todo {
+  constructor(public text: string, public _id?: ObjectId) {}
 }

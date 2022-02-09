@@ -8,17 +8,18 @@ const app = express();
 
 app.use(json());
 
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  res.status(500).json({ message: err.message });
+connectToDatabase()
+.then(() => {
+  app.use("/todos", todoRoutes);
+  
+  app.listen(3001);
+})
+.catch((error: Error) => {
+  console.error("Database connection failed", error);
+  process.exit();
 });
 
-connectToDatabase()
-  .then(() => {
-    app.use("/todos", todoRoutes);
-
-    app.listen(3001);
-  })
-  .catch((error: Error) => {
-    console.error("Database connection failed", error);
-    process.exit();
-  });
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  console.log('im the error handler')
+  res.status(500).json({ message: err.message });
+});

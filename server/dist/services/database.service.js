@@ -37,12 +37,9 @@ exports.collections = {};
 // Initialize Connection
 function connectToDatabase() {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(process.env.DB_CONN_STRING);
         const client = new mongoDB.MongoClient(process.env.DB_CONN_STRING);
         yield client.connect();
-        console.log(process.env.DB_NAME);
         const db = client.db(process.env.DB_NAME);
-        console.log(process.env.LIST_COLLECTION_NAME);
         const listCollection = db.collection(process.env.LIST_COLLECTION_NAME);
         exports.collections.list = listCollection;
         console.log(`Successfully connected to database: ${db.databaseName} and collection: ${listCollection.collectionName}`);

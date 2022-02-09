@@ -1,52 +1,41 @@
 import { RequestHandler } from 'express';
-import { Todo } from '../models/todos';
+import { ObjectId } from "mongodb";
 import { collections } from "../services/database.service";
+import Todo from '../models/todos';
 
-const TODOS: Todo[] = [];
 
-export const createTodo: RequestHandler = (req, res, next) => {
+export const getTodos: RequestHandler = async (req, res, next) => {
+  const todos = (await collections.list!.find({}).toArray()) as unknown as Todo[];
+  res.status(200).send(todos);
+}
+
+export const createTodo: RequestHandler = async (req, res, next) => {
   const text = (req.body as {text: string}).text;
-  const newTodo = new Todo(Math.random().toString(), text);
-
-  TODOS.push(newTodo);
-
+  const newTodo = new Todo(text);
+  await collections.list?.insertOne(newTodo);
   res.status(201).json({ message: 'Created the todo', createdTodo: newTodo });
 }
 
-export const getTodos: RequestHandler = async (req, res, next) => {
-  try {
-    const todos = (await collections.list!.find({}).toArray()) as unknown as Todo[];
+export const updateTodo: RequestHandler<{id: string}> = async (req, res, next) => {
+  const id = req.params.id;
+  const updatedText: Todo = req.body as Todo;
+  const query = { _id: new ObjectId(id) };
+  await collections.list!.updateOne(query, { $set: updatedText });
 
-     res.status(200).send(todos);
- } catch (error) {
-     res.status(500).send('error.message');
- }
-  // res.json({ todos: TODOS })
-}
-
-export const updateTodo: RequestHandler<{id: string}> = (req, res, next) => {
-  const todoId = req.params.id;
-  const updatedText = (req.body as {text: string}).text;
-
-  const todoIndex = TODOS.findIndex(todo => todo.id === todoId);
+  const todos = (await collections.list!.find({}).toArray()) as unknown as Todo[];
   
-  if (todoIndex < 0) {
-    throw new Error('Could not find to do!')
-  }
-
-  TODOS[todoIndex] = new Todo(TODOS[todoIndex].id, updatedText);
-  res.json({ message: 'Updated!', updatedTodos: TODOS[todoIndex] });
+  res.status(200).json({ message: 'Updated!', updatedTodos: todos });
 }
 
-export const deleteTodo: RequestHandler = (req, res, next) => {
-  const todoId = req.params.id;
+// export const deleteTodo: RequestHandler = (req, res, next) => {
+//   const todoId = req.params.id;
 
-  const todoIndex = TODOS.findIndex(todo => todo.id === todoId);
+//   const todoIndex = TODOS.findIndex(todo => todo.id === todoId);
   
-  if (todoIndex < 0) {
-    throw new Error('Could not find to do!')
-  }
+//   if (todoIndex < 0) {
+//     throw new Error('Could not find to do!')
+//   }
 
-  TODOS.splice(todoIndex, 1);
-  res.json({ message: 'Todo deleted!' })
-}
+//   TODOS.splice(todoIndex, 1);
+//   res.json({ message: 'Todo deleted!' })
+// }

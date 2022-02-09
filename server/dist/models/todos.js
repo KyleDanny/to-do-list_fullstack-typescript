@@ -1,10 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Todo = void 0;
 class Todo {
-    constructor(text, id) {
+    constructor(text, _id) {
         this.text = text;
-        this.id = id;
+        this._id = _id;
     }
 }
-exports.Todo = Todo;
+exports.default = Todo;
