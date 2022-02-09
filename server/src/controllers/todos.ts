@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express';
 import { Todo } from '../models/todos';
+import { collections } from "../services/database.service";
 
 const TODOS: Todo[] = [];
 
@@ -12,8 +13,15 @@ export const createTodo: RequestHandler = (req, res, next) => {
   res.status(201).json({ message: 'Created the todo', createdTodo: newTodo });
 }
 
-export const getTodos: RequestHandler = (req, res, next) => {
-  res.json({ todos: TODOS })
+export const getTodos: RequestHandler = async (req, res, next) => {
+  try {
+    const todos = (await collections.list!.find({}).toArray()) as unknown as Todo[];
+
+     res.status(200).send(todos);
+ } catch (error) {
+     res.status(500).send('error.message');
+ }
+  // res.json({ todos: TODOS })
 }
 
 export const updateTodo: RequestHandler<{id: string}> = (req, res, next) => {
