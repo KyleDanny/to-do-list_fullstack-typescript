@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateTodo = exports.createTodo = exports.getTodos = void 0;
+exports.deleteTodo = exports.updateTodo = exports.createTodo = exports.getTodos = void 0;
 const mongodb_1 = require("mongodb");
 const database_service_1 = require("../services/database.service");
 const todos_1 = __importDefault(require("../models/todos"));
@@ -38,12 +38,13 @@ const updateTodo = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
     res.status(200).json({ message: 'Updated!', updatedTodos: todos });
 });
 exports.updateTodo = updateTodo;
-// export const deleteTodo: RequestHandler = (req, res, next) => {
-//   const todoId = req.params.id;
-//   const todoIndex = TODOS.findIndex(todo => todo.id === todoId);
-//   if (todoIndex < 0) {
-//     throw new Error('Could not find to do!')
-//   }
-//   TODOS.splice(todoIndex, 1);
-//   res.json({ message: 'Todo deleted!' })
-// }
+const deleteTodo = (req, res, next) => {
+    const todoId = req.params.id;
+    const todoIndex = TODOS.findIndex(todo => todo.id === todoId);
+    if (todoIndex < 0) {
+        throw new Error('Could not find to do!');
+    }
+    TODOS.splice(todoIndex, 1);
+    res.json({ message: 'Todo deleted!' });
+};
+exports.deleteTodo = deleteTodo;

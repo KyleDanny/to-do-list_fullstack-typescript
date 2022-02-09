@@ -27,15 +27,15 @@ export const updateTodo: RequestHandler<{id: string}> = async (req, res, next) =
   res.status(200).json({ message: 'Updated!', updatedTodos: todos });
 }
 
-// export const deleteTodo: RequestHandler = (req, res, next) => {
-//   const todoId = req.params.id;
+export const deleteTodo: RequestHandler = (req, res, next) => {
+  const todoId = req.params.id;
 
-//   const todoIndex = TODOS.findIndex(todo => todo.id === todoId);
+  const todoIndex = TODOS.findIndex(todo => todo.id === todoId);
   
-//   if (todoIndex < 0) {
-//     throw new Error('Could not find to do!')
-//   }
+  if (todoIndex < 0) {
+    throw new Error('Could not find to do!')
+  }
 
-//   TODOS.splice(todoIndex, 1);
-//   res.json({ message: 'Todo deleted!' })
-// }
+  TODOS.splice(todoIndex, 1);
+  res.json({ message: 'Todo deleted!' })
+}
