@@ -5,7 +5,7 @@ import Todo from '../models/todos';
 
 
 export const getTodos: RequestHandler = async (req, res, next) => {
-  const todos = (await collections.list!.find({}).toArray()) as unknown as Todo[];
+  const todos = (await collections.list?.find({}).toArray()) as unknown as Todo[];
   res.status(200).send(todos);
 }
 
@@ -22,20 +22,17 @@ export const updateTodo: RequestHandler<{id: string}> = async (req, res, next) =
   const query = { _id: new ObjectId(id) };
   await collections.list!.updateOne(query, { $set: updatedText });
 
-  const todos = (await collections.list!.find({}).toArray()) as unknown as Todo[];
+  const todos = (await collections.list?.find({}).toArray()) as unknown as Todo[];
   
   res.status(200).json({ message: 'Updated!', updatedTodos: todos });
 }
 
-export const deleteTodo: RequestHandler = (req, res, next) => {
-  const todoId = req.params.id;
+export const deleteTodo: RequestHandler = async (req, res, next) => {
+  const id = req.params.id;
+  const query = { _id: new ObjectId(id) };
+  const result = await collections.list?.deleteOne(query);
 
-  const todoIndex = TODOS.findIndex(todo => todo.id === todoId);
-  
-  if (todoIndex < 0) {
-    throw new Error('Could not find to do!')
-  }
+  const todos = (await collections.list?.find({}).toArray()) as unknown as Todo[];
 
-  TODOS.splice(todoIndex, 1);
-  res.json({ message: 'Todo deleted!' })
+  res.status(202).json({ message: `Successfully removed game with id ${id}`, updatedTodos: todos});
 }

@@ -17,34 +17,35 @@ const mongodb_1 = require("mongodb");
 const database_service_1 = require("../services/database.service");
 const todos_1 = __importDefault(require("../models/todos"));
 const getTodos = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const todos = (yield database_service_1.collections.list.find({}).toArray());
+    var _a;
+    const todos = (yield ((_a = database_service_1.collections.list) === null || _a === void 0 ? void 0 : _a.find({}).toArray()));
     res.status(200).send(todos);
 });
 exports.getTodos = getTodos;
 const createTodo = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+    var _b;
     const text = req.body.text;
     const newTodo = new todos_1.default(text);
-    yield ((_a = database_service_1.collections.list) === null || _a === void 0 ? void 0 : _a.insertOne(newTodo));
+    yield ((_b = database_service_1.collections.list) === null || _b === void 0 ? void 0 : _b.insertOne(newTodo));
     res.status(201).json({ message: 'Created the todo', createdTodo: newTodo });
 });
 exports.createTodo = createTodo;
 const updateTodo = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _c;
     const id = req.params.id;
     const updatedText = req.body;
     const query = { _id: new mongodb_1.ObjectId(id) };
     yield database_service_1.collections.list.updateOne(query, { $set: updatedText });
-    const todos = (yield database_service_1.collections.list.find({}).toArray());
+    const todos = (yield ((_c = database_service_1.collections.list) === null || _c === void 0 ? void 0 : _c.find({}).toArray()));
     res.status(200).json({ message: 'Updated!', updatedTodos: todos });
 });
 exports.updateTodo = updateTodo;
-const deleteTodo = (req, res, next) => {
-    const todoId = req.params.id;
-    const todoIndex = TODOS.findIndex(todo => todo.id === todoId);
-    if (todoIndex < 0) {
-        throw new Error('Could not find to do!');
-    }
-    TODOS.splice(todoIndex, 1);
-    res.json({ message: 'Todo deleted!' });
-};
+const deleteTodo = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _d, _e;
+    const id = req.params.id;
+    const query = { _id: new mongodb_1.ObjectId(id) };
+    const result = yield ((_d = database_service_1.collections.list) === null || _d === void 0 ? void 0 : _d.deleteOne(query));
+    const todos = (yield ((_e = database_service_1.collections.list) === null || _e === void 0 ? void 0 : _e.find({}).toArray()));
+    res.status(202).json({ message: `Successfully removed game with id ${id}`, updatedTodos: todos });
+});
 exports.deleteTodo = deleteTodo;
