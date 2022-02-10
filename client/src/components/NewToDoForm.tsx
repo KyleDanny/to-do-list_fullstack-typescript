@@ -1,10 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import './NewToDoForm.css'
-const axios = require('axios');
-
+import { Todo } from '../todo.model'
 
 type todoHandlerProps = {
-  todoAddHandler: (todoText: string) => void
+  todoAddHandler: (todoText: Todo) => void
 }
 
 const NewToDoForm: React.FC<todoHandlerProps> = ({ todoAddHandler }) => {
@@ -12,20 +11,10 @@ const NewToDoForm: React.FC<todoHandlerProps> = ({ todoAddHandler }) => {
 
   const todoSubmitHandler = (event: React.FormEvent) => {
     event.preventDefault();
-    const enteredText = { text: textInputRef.current!.value }
-
-    axios.post('http://localhost:3001/todos/', {
-     enteredText
-    })
-    .then(function (response: object) {
-      console.log(response);
-    })
-
-    todoAddHandler(enteredText.text);
+    const newTodo = { id: Math.random().toString(), text: textInputRef.current!.value }
+    todoAddHandler(newTodo);
+    textInputRef.current!.value = '';
   }
-
-  useEffect(() => {
-  })
 
   return (
     <form onSubmit={todoSubmitHandler}>
