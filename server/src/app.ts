@@ -1,12 +1,15 @@
 import express, { Request, Response, NextFunction } from "express";
-import { json } from "body-parser";
+import cors from 'cors';
+import bodyParser from "body-parser";
 
 import { connectToDatabase } from "./services/database.service";
 import todoRoutes from "./routes/todos";
 
 const app = express();
+const PORT = process.env.PORT || 3001;
 
-app.use(json());
+app.use(cors());
+app.use(bodyParser.json());
 
 connectToDatabase()
 .then(() => {

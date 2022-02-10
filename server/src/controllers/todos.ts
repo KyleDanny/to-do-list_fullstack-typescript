@@ -10,7 +10,7 @@ export const getTodos: RequestHandler = async (req, res, next) => {
 }
 
 export const createTodo: RequestHandler = async (req, res, next) => {
-  const text = (req.body as {text: string}).text;
+  const text = req.body.enteredText.text;
   const newTodo = new Todo(text);
   await collections.list?.insertOne(newTodo);
   res.status(201).json({ message: 'Created the todo', createdTodo: newTodo });
