@@ -3,17 +3,17 @@ import { ObjectId } from "mongodb";
 import { collections } from "../services/database.service";
 import Todo from '../models/todos';
 
-
 export const getTodos: RequestHandler = async (req, res, next) => {
   const todos = (await collections.list?.find({}).toArray()) as unknown as Todo[];
+
   res.status(200).send(todos);
 }
 
 export const createTodo: RequestHandler = async (req, res, next) => {
-  const text = req.body.enteredText.text;
-  const newTodo = new Todo(text);
-  await collections.list?.insertOne(newTodo);
-  const todos = (await collections.list?.find({}).toArray()) as unknown as Todo[];
+  console.log(req.body.todos);
+  const todos = req.body.todos;
+  // await collections.list?.insertOne({ key: todos });
+  // const todos = (await collections.list?.find({}).toArray()) as unknown as Todo[];
 
   res.status(201).json({ message: 'Created the todo', updatedTodos: todos });
 }
